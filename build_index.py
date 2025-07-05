@@ -4,12 +4,12 @@ from datasets import load_dataset
 from llama_index.core import VectorStoreIndex, Document
 from llama_index.core.node_parser import SimpleNodeParser
 
-# === ВСТАВ СВІЙ API КЛЮЧ ТУТ ===
+# === enter your API key ===
 openai.api_key = ""
-# === 1. Завантаження датасету з HuggingFace ===
+# === 1. loading the dataset from HuggingFace ===
 dataset = load_dataset("nbertagnolli/counsel-chat", split="train")
 
-# === 2. Формування документів ===
+# === 2. documentation ===
 documents = []
 for item in dataset:
     question = (item.get("questionText") or "").strip()
@@ -22,18 +22,19 @@ for item in dataset:
 
 print(f"✅ Documents loaded: {len(documents)}")
 
-# === 3. Парсинг без кастомного SentenceSplitter ===
+# === 3. Parsing without  SentenceSplitter because of the latest model===
 parser = SimpleNodeParser.from_defaults()
 nodes = parser.get_nodes_from_documents(documents)
 
-# === 4. Побудова індексу
+# === 4. Indexing
 index = VectorStoreIndex(nodes)
 
-# === 5. Збереження
+# === 5. persisting the index to disk
 PERSIST_DIR = "./storage/VectorStoreIndex"
 index.storage_context.persist(persist_dir=PERSIST_DIR)
 
 print("✅ Index built and saved successfully.")
+
 
 
 
